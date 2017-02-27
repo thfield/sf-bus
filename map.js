@@ -6,12 +6,13 @@ var foo = d3.select('#route-titles').selectAll('li')
 .append('li')
 .text(function(d){return d.shortName + ' ' + d.longName})
 .on("mouseover", function(d){
-console.log(d)
+  d3.select(this).classed('highlight',true)
   d3.select('#route' + d.shortName)
     .style("stroke", "#FF5964")
     .style("stroke-width",5);
 })
 .on("mouseout", function(d){
+  d3.select(this).classed('highlight',false)
   d3.select('#route' + d.shortName).style("stroke", "#3E92CC")
     .style("stroke-width",1);
 });
@@ -39,7 +40,7 @@ d3_queue.queue()
     .defer(d3.json, "../shapefiles/all.geo.json")
     .await(mapDraw)
 
-function highlightRoute (routeId) {
+function showOneRoute (routeId) {
   d3.selectAll('.bus-route').classed('hidden', true)
   d3.select('#'+routeId).classed('hidden', false)
 }
@@ -72,11 +73,14 @@ function mapDraw(err, collection){
         var bounds = path.bounds(collection),
             topLeft = bounds[0],
             bottomRight = bounds[1];
+
         svg .attr("width", bottomRight[0] - topLeft[0])
             .attr("height", bottomRight[1] - topLeft[1])
             .style("left", topLeft[0] + "px")
             .style("top", topLeft[1] + "px");
+
         g   .attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
         feature.attr("d", path);
     }
 

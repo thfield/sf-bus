@@ -8,6 +8,7 @@ body, #map {
     padding: 0px;
     margin: 0px;
     overflow: hidden;
+    font-family: sans-serif;
 }
 .sidebar {
     z-index: 800;
@@ -28,6 +29,9 @@ body, #map {
 }*/
 
 li {
-  font-size: 10px;
-
+  font-size: 0.6em;
+  cursor: pointer;
+}
+.highlight {
+  color: #FF5964;
 }
