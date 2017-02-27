@@ -20,6 +20,7 @@ let routes = fs.readFileSync(path + routes_file, 'utf8')
 let trips = fs.readFileSync(path + trips_file, 'utf8')
 let shapes = fs.readFileSync(path + shapes_file, 'utf8')
 
+let allRoutes = []
 
 /* parse csv strings into objects */
 csv(routes, {columns: true}, parseRoutes)
@@ -30,7 +31,8 @@ function parseRoutes(err,data){
   /* make name map */
   if (err) console.error(err)
   data.forEach(el=>{
-    routeNameMap.set(el.route_id,{shortName:el.route_short_name, longName:el.route_long_name})
+    let shorty = el.route_short_name.replace(/ /g, '')
+    routeNameMap.set(el.route_id,{shortName:shorty, longName:el.route_long_name})
   })
 }
 
@@ -61,8 +63,12 @@ function parseShapes(err, data){
   routeNameMap.forEach((props, routeId)=>{
     let shapeId = shapeRouteMap.get(routeId)
     let geoJSON = turf.lineString(lineshapes[shapeId], props)
+    allRoutes.push(geoJSON)
     write('shapefiles/' + geoJSON.properties.shortName + '.geo.json', geoJSON)
   })
+
+  let fc = turf.featureCollection(allRoutes)
+  write('shapefiles/all.geo.json', fc)
 
   let elapsed = (new Date() - start) / 1000
   console.log('took ' + elapsed + 's')

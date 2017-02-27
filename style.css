@@ -1,0 +1,33 @@
+.hidden {
+  display: none;
+}
+html,
+body, #map {
+    height: 100%;
+    /*width: 100%;*/
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+.sidebar {
+    z-index: 800;
+    background: #f7f7f7;
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 250px;
+    opacity: .8;
+}
+.scrollbox {
+    height: 80%;
+    overflow: auto;
+}
+
+/*ul {
+  list-style: none;
+}*/
+
+li {
+  font-size: 10px;
+
+}
