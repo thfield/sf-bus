@@ -37,7 +37,7 @@ var svg = d3.select(map.getPanes().overlayPane).append("svg"),
 
 
 d3_queue.queue()
-    .defer(d3.json, "../shapefiles/all.geo.json")
+    .defer(d3.json, "./shapefiles/all.geo.json")
     .await(mapDraw)
 
 function showOneRoute (routeId) {
