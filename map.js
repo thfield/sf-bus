@@ -24,7 +24,7 @@ var foo = d3.select('#route-titles').selectAll('li')
 var map = L.map('map').setView([37.767683,-122.433701], 13);
 
 //Getting tile from Mapbox
-L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token={accessToken}', {
+L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token={accessToken}', {
     maxZoom: 18,
     minZoom: 13,
     attributionControl: true,
