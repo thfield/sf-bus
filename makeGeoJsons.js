@@ -46,7 +46,7 @@ function parseTrips(err, data){
   data.forEach(el=>{
     tripz[el.route_id] = tripz[el.route_id] || { }
     tripz[el.route_id][el.service_id] = tripz[el.route_id][el.service_id] || {}
-    tripz[el.route_id][el.service_id][el.shape_id] =tripz[el.route_id][el.service_id][el.shape_id] || 0
+    tripz[el.route_id][el.service_id][el.shape_id] = tripz[el.route_id][el.service_id][el.shape_id] || 0
     tripz[el.route_id][el.service_id][el.shape_id] += 1
   })
 
@@ -75,9 +75,8 @@ function parseShapes(err, data){
   })
   /* lineshapes is now k-v pairs, shape_id:[coordinates] */
 
-  // TODO write geojson linestrings for each shape, keyed by shape_id
+  // TODO write geojson linestrings for each shape, keyed by shape_id?
   // want to get by route
-  let foo = []
   routeNameMap.forEach((props, routeId)=>{
     let shapeId = shapeRouteMap.get(routeId + '-1')
     if (shapeId === 0) {

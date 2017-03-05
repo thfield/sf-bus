@@ -32,6 +32,24 @@ li {
   font-size: 0.6em;
   cursor: pointer;
 }
-.highlight {
+
+.bus-route {
+  fill: none;
+  stroke: #1a48d5;
+  stroke-width:1;
+}
+
+.text-highlight {
   color: #FF5964;
+}
+.route-highlight {
+  stroke: #FF5964;
+  stroke-width: 3;
+}
+.sticky-text {
+  color: #bb59ff;
+}
+.sticky-route {
+  stroke: #bb59ff;
+  stroke-width:5;
 }

@@ -6,16 +6,24 @@ var foo = d3.select('#route-titles').selectAll('li')
 .append('li')
 .text(function(d){return d.shortName + ' ' + d.longName})
 .on("mouseover", function(d){
-  d3.select(this).classed('highlight',true)
+  d3.select(this).classed('text-highlight',true)
   d3.select('#route' + d.shortName)
-    .style("stroke", "#FF5964")
-    .style("stroke-width",5);
+    .classed('route-highlight', true)
 })
 .on("mouseout", function(d){
-  d3.select(this).classed('highlight',false)
-  d3.select('#route' + d.shortName).style("stroke", "#3E92CC")
-    .style("stroke-width",1);
-});
+  d3.select(this).classed('text-highlight',false)
+  d3.select('#route' + d.shortName)
+    .classed('route-highlight', false)
+})
+.on('click',function(d){
+  console.log(d)
+  d3.selectAll('#route-titles > li').classed('sticky-text', false)
+  d3.selectAll('.bus-route')
+      .classed('sticky-route',false)
+  d3.select(this).classed('sticky-text',true)
+  d3.select('#route' + d.shortName)
+    .classed('sticky-route',true)
+})
 
 
 
@@ -61,9 +69,6 @@ function mapDraw(err, collection){
           return 'route' + d.properties.shortName;
         })
         .attr('class', 'bus-route')
-        .style("fill", "none")
-        .style("stroke", "#3E92CC")
-        .style("stroke-width",1)
 
     map.on("viewreset", reset);
     reset();
