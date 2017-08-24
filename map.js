@@ -16,7 +16,6 @@ var foo = d3.select('#route-titles').selectAll('li')
     .classed('route-highlight', false)
 })
 .on('click',function(d){
-  console.log(d)
   d3.selectAll('#route-titles > li').classed('sticky-text', false)
   d3.selectAll('.bus-route')
       .classed('sticky-route',false)
@@ -36,8 +35,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?acce
     maxZoom: 18,
     minZoom: 13,
     attributionControl: true,
-    id: 'smoningi.a304c3dc',
-    accessToken: 'pk.eyJ1Ijoic21vbmluZ2kiLCJhIjoiQ21rN1pjSSJ9.WKrPFjjb7LRMBjyban698g'
+    accessToken: 'pk.eyJ1IjoidGhmaWVsZCIsImEiOiJjajZpamRmYzcwdWZnMnhwbTl0YzVtMXdsIn0.EpjPSJjmgnH1ZpTLLJpAqA'
 }).addTo(map);
 
 var svg = d3.select(map.getPanes().overlayPane).append("svg"),
