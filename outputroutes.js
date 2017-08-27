@@ -17,6 +17,17 @@ function parseRoutes(err,data){
     let shorty = el.route_short_name.replace(/ /g, '')
     arr.push({shortName:shorty, longName:el.route_long_name})
   })
+
+  // make directions 'A' and 'B'
+  arr = arr.map(function(item) {
+      let itemA = Object.assign({}, item)
+      let itemB = Object.assign({}, item)
+      itemA.direction = "A"
+      itemB.direction = "B"
+      return [itemA, itemB];
+    })
+    .reduce(function(a, b) { return a.concat(b) })
+
   write('lines.json', arr)
 }
 
