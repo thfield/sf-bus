@@ -15,15 +15,12 @@ var foo = d3.select('#route-titles').selectAll('li')
 .enter()
 .append('li')
 .text(function(d){return d.shortName + ' ' + d.longName + ' direction ' + d.direction})
+.attr('class', function(d){ return 'route'+ d.shortName + d.direction})
 .on("mouseover", function(d){
-  d3.select(this).classed('text-highlight',true)
-  d3.select('#route' + d.shortName + d.direction)
-    .classed('route-highlight', true)
+  highlightRoute(d.shortName, d.direction)
 })
 .on("mouseout", function(d){
-  d3.select(this).classed('text-highlight',false)
-  d3.select('#route' + d.shortName + d.direction)
-    .classed('route-highlight', false)
+  unHighlightRoute(d.shortName, d.direction)
 })
 .on('click',function(d){
   if( d3.select(this).classed('sticky-text') ) {
@@ -34,12 +31,17 @@ var foo = d3.select('#route-titles').selectAll('li')
     d3.selectAll('.bus-route')
         .classed('sticky-route',false)
     d3.select(this).classed('sticky-text',true)
-    d3.select('#route' + d.shortName + d.direction)
+    d3.select('path.route' + d.shortName + d.direction)
       .classed('sticky-route',true)
   }
 })
 
-
+function highlightRoute(name,direction) {
+  d3.selectAll('.route'+ name + direction).classed('text-highlight', true).classed('route-highlight', true)
+}
+function unHighlightRoute(name,direction) {
+  d3.selectAll('.route'+ name + direction).classed('text-highlight', false).classed('route-highlight', false)
+}
 
 
 //Setting up leaflet map
@@ -78,10 +80,15 @@ function mapDraw(err, collection){
         .enter()
         .append("path")
         .attr('d', path)
-        .attr("id", function(d){
-          return 'route' + d.properties.shortName + d.properties.direction;
+        .attr("class", function(d){
+          return 'bus-route route' + d.properties.shortName + d.properties.direction;
         })
-        .attr('class', 'bus-route')
+        .on("mouseover", function(d){
+          highlightRoute(d.properties.shortName, d.properties.direction)
+        })
+        .on("mouseout", function(d){
+          unHighlightRoute(d.properties.shortName, d.properties.direction)
+        })
 
     map.on("viewreset", reset);
     reset();
