@@ -3,10 +3,7 @@ console.time('Make JSONs')
 
 const fs = require('fs')
 const turf = require('turf')
-const csv = require('csv-parse')
-//TODO: use synchronous csv-parse `require('csv-parse/lib/sync')`
-// then parse[routes,trips,shapes] will just create Maps
-// and joining that takes place in parseShapes() can be put in own function
+const csv = require('csv-parse/lib/sync')
 
 const path = './google_transit/'
 
@@ -17,6 +14,7 @@ let shapes_file = 'shapes.txt'
 /* Maps */
 let routeNameMap = new Map() // from routes.txt { route_id: {shortName, longName} }
 let shapeRouteMap = new Map() // from trips.txt { route_id+service_id+[A/B]: most_common_route_id_for_that_service_window_and_direction}
+let lineStrings = {} //TODO: use a Map instead?
 // let shapeMap = new Map() // from shapes.txt {  }
 
 /* read the csvs from fs */
@@ -27,9 +25,18 @@ let shapes = fs.readFileSync(path + shapes_file, 'utf8')
 let allRoutes = []
 
 /* parse csv strings into objects */
-csv(routes, {columns: true}, parseRoutes)
-csv(trips, {columns: true}, parseTrips)
-csv(shapes, {columns: true}, parseShapes)
+// csv(routes, {columns: true}, parseRoutes)
+// csv(trips, {columns: true}, parseTrips)
+// csv(shapes, {columns: true}, parseShapes)
+parseRoutes( null, csv(routes, {columns: true}) )
+parseTrips( null, csv(trips, {columns: true}) )
+parseShapes( null, csv(shapes, {columns: true}) )
+
+doTheJoining()
+
+
+
+
 
 function parseRoutes(err,data){
   /* make name map */
@@ -92,7 +99,7 @@ function mostCommonValue(obj) {
 
 function parseShapes(err, data){
   if (err) console.error(err)
-  let lineStrings = {} //TODO: use a Map instead?
+
   // TODO: make sure that data is ordered by shape_id and then shape_pt_sequence
   data.forEach(el=>{
     lineStrings[''+el.shape_id] = lineStrings[''+el.shape_id] || []
@@ -101,45 +108,47 @@ function parseShapes(err, data){
   /* lineStrings is now k-v pairs: { shape_id:[[lon1,lat1], [lon2,lat2], ...], ... } */
   // TODO write geojson linestrings for each shape, keyed by shape_id?
 
-  // want to get by route
-  routeNameMap.forEach((props, routeId)=>{
-    let directions = ['A','B']
-    directions.forEach(direction=>{
-      let shapeId = shapeRouteMap.get(routeId + '-1' + direction)
-      // we're only interested in weekday routes right now
-      if (shapeId === undefined) { return }
-      // if (shapeId === undefined) {
-      //   shapeId = shapeRouteMap.get(routeId + '-2' + direction)
-      // }
-      // if (shapeId === undefined) {
-      //   shapeId = shapeRouteMap.get(routeId + '-3' + direction)
-      // }
-      try {
-        let geoJsonProps = Object.assign({direction:direction}, props)
-        let geoJSON = turf.lineString(lineStrings[shapeId], geoJsonProps)
-        allRoutes.push( geoJSON )
-        write('shapefiles/' + geoJSON.properties.shortName + '-' + direction + '.geo.json', geoJSON)
-      } catch(e){
-        /* one route only goes in one direction: catching that error here */
-        console.error(routeId, direction)
-        console.error(e)
-      }
-
-    })
-  })
-
-  allRoutes.sort((a,b)=>{
-    return a.properties.shortName - b.properties.shortName
-  })
-
-  // TODO: combine route direction A/B linestrings into multilinestrings for `all.geo.json` to get rid of extra "direction a", "direction b" distinction and make file download smaller?
-  let fc = turf.featureCollection(allRoutes)
-  write('shapefiles/all.geo.json', fc)
-
-  /* end timer and alert*/
-  console.timeEnd('Make JSONs')
 }
 
+function doTheJoining(){
+    // want to get by route
+    routeNameMap.forEach((props, routeId)=>{
+      let directions = ['A','B']
+      directions.forEach(direction=>{
+        let shapeId = shapeRouteMap.get(routeId + '-1' + direction)
+        // we're only interested in weekday routes right now
+        if (shapeId === undefined) { return }
+        // if (shapeId === undefined) {
+        //   shapeId = shapeRouteMap.get(routeId + '-2' + direction)
+        // }
+        // if (shapeId === undefined) {
+        //   shapeId = shapeRouteMap.get(routeId + '-3' + direction)
+        // }
+        try {
+          let geoJsonProps = Object.assign({direction:direction}, props)
+          let geoJSON = turf.lineString(lineStrings[shapeId], geoJsonProps)
+          allRoutes.push( geoJSON )
+          write('shapefiles/' + geoJSON.properties.shortName + '-' + direction + '.geo.json', geoJSON)
+        } catch(e){
+          /* one route only goes in one direction: catching that error here */
+          console.error(routeId, direction)
+          console.error(e)
+        }
+
+      })
+    })
+
+    allRoutes.sort((a,b)=>{
+      return a.properties.shortName - b.properties.shortName
+    })
+
+    // TODO: combine route direction A/B linestrings into multilinestrings for `all.geo.json` to get rid of extra "direction a", "direction b" distinction and make file download smaller?
+    let fc = turf.featureCollection(allRoutes)
+    write('shapefiles/all.geo.json', fc)
+
+    /* end timer and alert */
+    console.timeEnd('Make JSONs')
+}
 
 
 
