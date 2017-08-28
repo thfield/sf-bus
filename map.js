@@ -1,41 +1,44 @@
-var busLines = [{"shortName":"1","longName":"CALIFORNIA"},{"shortName":"1AX","longName":"CALIFORNIA A EXPRESS"},{"shortName":"1BX","longName":"CALIFORNIA B EXPRESS"},{"shortName":"31AX","longName":"BALBOA A EXPRESS"},{"shortName":"31BX","longName":"BALBOA B EXPRESS"},{"shortName":"38AX","longName":"GEARY A EXPRESS"},{"shortName":"38BX","longName":"GEARY B EXPRESS"},{"shortName":"2","longName":"CLEMENT"},{"shortName":"3","longName":"JACKSON"},{"shortName":"5","longName":"FULTON "},{"shortName":"5R","longName":"FULTON  RAPID"},{"shortName":"6","longName":"HAIGHT-PARNASSUS"},{"shortName":"7","longName":"HAIGHT-NORIEGA"},{"shortName":"7R","longName":"HAIGHT-NORIEGA RAPID"},{"shortName":"7X","longName":"NORIEGA EXPRESS"},{"shortName":"8","longName":"BAYSHORE"},{"shortName":"8AX","longName":"Bayshore A Express"},{"shortName":"8BX","longName":"Bayshore B Express"},{"shortName":"9","longName":"SAN Bruno "},{"shortName":"9R","longName":"SAN BRUNO RAPID"},{"shortName":"10","longName":"TOWNSEND"},{"shortName":"12","longName":"FOLSOM-PACIFIC"},{"shortName":"14","longName":"MISSION"},{"shortName":"14R","longName":"MISSION RAPID"},{"shortName":"14X","longName":"MISSION EXPRESS"},{"shortName":"18","longName":"46TH AVENUE"},{"shortName":"19","longName":"POLK"},{"shortName":"21","longName":"HAYES"},{"shortName":"22","longName":"FILLMORE"},{"shortName":"23","longName":"MONTEREY"},{"shortName":"24","longName":"DIVISADERO"},{"shortName":"25","longName":"TREASURE ISLAND"},{"shortName":"27","longName":"BRYANT"},{"shortName":"28","longName":"19TH AVENUE"},{"shortName":"28R","longName":"19TH AVENUE"},{"shortName":"29","longName":"SUNSET"},{"shortName":"30","longName":"STOCKTON"},{"shortName":"30X","longName":"MARINA EXPRESS"},{"shortName":"31","longName":"BALBOA"},{"shortName":"33","longName":"ASHBURY-18TH ST"},{"shortName":"35","longName":"EUREKA"},{"shortName":"36","longName":"TERESITA"},{"shortName":"37","longName":"CORBETT"},{"shortName":"38","longName":"GEARY"},{"shortName":"38R","longName":"GEARY RAPID"},{"shortName":"39","longName":"COIT"},{"shortName":"41","longName":"UNION"},{"shortName":"43","longName":"MASONIC"},{"shortName":"44","longName":"O'SHAUGHNESSY"},{"shortName":"45","longName":"UNION-STOCKTON"},{"shortName":"47","longName":"VAN NESS"},{"shortName":"48","longName":"QUINTARA-24TH STREET"},{"shortName":"49","longName":"VAN NESS-MISSION"},{"shortName":"52","longName":"EXCELSIOR"},{"shortName":"54","longName":"FELTON"},{"shortName":"55","longName":"16TH STREET"},{"shortName":"56","longName":"RUTLAND"},{"shortName":"57","longName":"PARKMERCED"},{"shortName":"Powell-Mason","longName":"CABLE CAR"},{"shortName":"Powell-Hyde","longName":"CABLE CAR"},{"shortName":"CALIFORNIA","longName":"CABLE CAR"},{"shortName":"66","longName":"QUINTARA"},{"shortName":"67","longName":"BERNAL HEIGHTS"},{"shortName":"76X","longName":"MARIN HEADLANDS EXPRESS"},{"shortName":"81X","longName":"CALTRAIN EXPRESS"},{"shortName":"82X","longName":"LEVI PLAZA EXPRESS"},{"shortName":"83X","longName":"MID-MARKET EXPRESS"},{"shortName":"88","longName":"BART SHUTTLE"},{"shortName":"90","longName":"SAN BRUNO OWL"},{"shortName":"91","longName":"3RD-19TH AVE OWL"},{"shortName":"K-OWL","longName":""},{"shortName":"L-OWL","longName":""},{"shortName":"M-OWL","longName":""},{"shortName":"N-OWL","longName":""},{"shortName":"T-OWL","longName":""},{"shortName":"E","longName":"EMBARCADERO"},{"shortName":"F","longName":"MARKET & WHARVES"},{"shortName":"J","longName":"CHURCH"},{"shortName":"KT","longName":"INGLESIDETHIRD"},{"shortName":"L","longName":"TARAVAL"},{"shortName":"M","longName":"OCEANVIEW"},{"shortName":"N","longName":"JUDAH"},{"shortName":"NX","longName":"N EXPRESS"}]
+// download bus line names and set up selector list
+d3.json('lines.json', function(err, busLines){
+  if (err) console.error(err)
 
-// make directions 'A' and 'B'
-busLines = busLines.map(function(item) {
-    let itemA = Object.assign({}, item)
-    let itemB = Object.assign({}, item)
-    itemA.direction = "A"
-    itemB.direction = "B"
-    return [itemA, itemB];
-  })
-  .reduce(function(a, b) { return a.concat(b) })
+  // make directions 'A' and 'B'
+  busLines = busLines.map(function(item) {
+      let itemA = Object.assign({}, item)
+      let itemB = Object.assign({}, item)
+      itemA.direction = "A"
+      itemB.direction = "B"
+      return [itemA, itemB];
+    })
+    .reduce(function(a, b) { return a.concat(b) })
 
-// set up route names list
-d3.select('#route-titles').selectAll('li')
-  .data(busLines)
-  .enter()
-  .append('li')
-  .text(function(d){return d.shortName + ' ' + d.longName + ' direction ' + d.direction})
-  .attr('class', function(d){ return 'route'+ d.shortName + d.direction})
-  .on("mouseover", function(d){
-    highlightRoute(d.shortName, d.direction)
-  })
-  .on("mouseout", function(d){
-    unHighlightRoute(d.shortName, d.direction)
-  })
-  .on('click',function(d){
-    if( d3.select(this).classed('sticky-text') ) {
-      d3.selectAll('#route-titles > li').classed('sticky-text', false)
-      d3.selectAll('.bus-route').classed('sticky-route',false)
-    } else {
-      d3.selectAll('#route-titles > li').classed('sticky-text', false)
-      d3.selectAll('.bus-route')
-          .classed('sticky-route',false)
-      d3.select(this).classed('sticky-text',true)
-      d3.select('path.route' + d.shortName + d.direction)
-        .classed('sticky-route',true)
-    }
-  })
+  // set up route names list
+  d3.select('#route-titles').selectAll('li')
+    .data(busLines)
+    .enter()
+    .append('li')
+    .text(function(d){return d.shortName + ' ' + d.longName + ' direction ' + d.direction})
+    .attr('class', function(d){ return 'route'+ d.shortName + d.direction})
+    .on("mouseover", function(d){
+      highlightRoute(d.shortName, d.direction)
+    })
+    .on("mouseout", function(d){
+      unHighlightRoute(d.shortName, d.direction)
+    })
+    .on('click',function(d){
+      if( d3.select(this).classed('sticky-text') ) {
+        d3.selectAll('#route-titles > li').classed('sticky-text', false)
+        d3.selectAll('.bus-route').classed('sticky-route',false)
+      } else {
+        d3.selectAll('#route-titles > li').classed('sticky-text', false)
+        d3.selectAll('.bus-route')
+            .classed('sticky-route',false)
+        d3.select(this).classed('sticky-text',true)
+        d3.select('path.route' + d.shortName + d.direction)
+          .classed('sticky-route',true)
+      }
+    })
+})
 
 function highlightRoute(name,direction) {
   d3.selectAll('.route'+ name + direction).classed('text-highlight', true).classed('route-highlight', true)
@@ -64,14 +67,14 @@ d3_queue.queue()
     .defer(d3.json, "./shapefiles/all.geo.json")
     .await(mapDraw)
 
-function showOneRoute (routeId) {
-  d3.selectAll('.bus-route').classed('hidden', true)
-  d3.select('#'+routeId).classed('hidden', false)
-}
-
-function showAllRoutes () {
-  d3.selectAll('.bus-route').classed('hidden', false)
-}
+// function showOneRoute (routeId) {
+//   d3.selectAll('.bus-route').classed('hidden', true)
+//   d3.select('#'+routeId).classed('hidden', false)
+// }
+//
+// function showAllRoutes () {
+//   d3.selectAll('.bus-route').classed('hidden', false)
+// }
 
 function mapDraw(err, collection){
     var transform = d3.geo.transform({point: projectPoint}),

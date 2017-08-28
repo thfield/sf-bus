@@ -19,14 +19,14 @@ function parseRoutes(err,data){
   })
 
   // make directions 'A' and 'B'
-  arr = arr.map(function(item) {
-      let itemA = Object.assign({}, item)
-      let itemB = Object.assign({}, item)
-      itemA.direction = "A"
-      itemB.direction = "B"
-      return [itemA, itemB];
-    })
-    .reduce(function(a, b) { return a.concat(b) })
+  // arr = arr.map(function(item) {
+  //     let itemA = Object.assign({}, item)
+  //     let itemB = Object.assign({}, item)
+  //     itemA.direction = "A"
+  //     itemB.direction = "B"
+  //     return [itemA, itemB];
+  //   })
+  //   .reduce(function(a, b) { return a.concat(b) })
 
   write('lines.json', arr)
 }
