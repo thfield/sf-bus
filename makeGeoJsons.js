@@ -1,9 +1,12 @@
 "use strict"
-const start = new Date()
+console.time('Make JSONs')
 
 const fs = require('fs')
-const csv = require('csv-parse')
 const turf = require('turf')
+const csv = require('csv-parse')
+//TODO: use synchronous csv-parse `require('csv-parse/lib/sync')`
+// then parse[routes,trips,shapes] will just create Maps
+// and joining that takes place in parseShapes() can be put in own function
 
 const path = './google_transit/'
 
@@ -12,9 +15,9 @@ let trips_file = 'trips.txt'
 let shapes_file = 'shapes.txt'
 
 /* Maps */
-let shapeRouteMap = new Map() // from trips.txt { route_id+service_id+[A/B]: most_common_route_id_for_that_service_window}
 let routeNameMap = new Map() // from routes.txt { route_id: {shortName, longName} }
-let shapeMap = new Map() // from shapes.txt {  }
+let shapeRouteMap = new Map() // from trips.txt { route_id+service_id+[A/B]: most_common_route_id_for_that_service_window_and_direction}
+// let shapeMap = new Map() // from shapes.txt {  }
 
 /* read the csvs from fs */
 let routes = fs.readFileSync(path + routes_file, 'utf8')
@@ -32,7 +35,7 @@ function parseRoutes(err,data){
   /* make name map */
   if (err) console.error(err)
   data.forEach(el=>{
-    // get rid of extraneous spaces in short_name field
+    /* get rid of extraneous spaces in short_name field */
     let shorty = el.route_short_name.replace(/ /g, '')
     routeNameMap.set(el.route_id,{shortName:shorty, longName:el.route_long_name})
   })
@@ -89,31 +92,35 @@ function mostCommonValue(obj) {
 
 function parseShapes(err, data){
   if (err) console.error(err)
-  let lineshapes = {}
+  let lineStrings = {} //TODO: use a Map instead?
+  // TODO: make sure that data is ordered by shape_id and then shape_pt_sequence
   data.forEach(el=>{
-    lineshapes[''+el.shape_id] = lineshapes[''+el.shape_id] || []
-    lineshapes[''+el.shape_id].push([+el.shape_pt_lon,+el.shape_pt_lat])
+    lineStrings[''+el.shape_id] = lineStrings[''+el.shape_id] || []
+    lineStrings[''+el.shape_id].push([+el.shape_pt_lon,+el.shape_pt_lat])
   })
-  /* lineshapes is now k-v pairs, shape_id:[coordinates] */
-
+  /* lineStrings is now k-v pairs: { shape_id:[[lon1,lat1], [lon2,lat2], ...], ... } */
   // TODO write geojson linestrings for each shape, keyed by shape_id?
+
   // want to get by route
   routeNameMap.forEach((props, routeId)=>{
     let directions = ['A','B']
     directions.forEach(direction=>{
       let shapeId = shapeRouteMap.get(routeId + '-1' + direction)
-      if (shapeId === undefined) {
-        shapeId = shapeRouteMap.get(routeId + '-2' + direction)
-      }
-      if (shapeId === undefined) {
-        shapeId = shapeRouteMap.get(routeId + '-3' + direction)
-      }
-      try{
+      // we're only interested in weekday routes right now
+      if (shapeId === undefined) { return }
+      // if (shapeId === undefined) {
+      //   shapeId = shapeRouteMap.get(routeId + '-2' + direction)
+      // }
+      // if (shapeId === undefined) {
+      //   shapeId = shapeRouteMap.get(routeId + '-3' + direction)
+      // }
+      try {
         let geoJsonProps = Object.assign({direction:direction}, props)
-        let geoJSON = turf.lineString(lineshapes[shapeId], geoJsonProps)
+        let geoJSON = turf.lineString(lineStrings[shapeId], geoJsonProps)
         allRoutes.push( geoJSON )
-        // write('shapefiles/' + geoJSON.properties.shortName + '-' + direction + '.geo.json', geoJSON)
+        write('shapefiles/' + geoJSON.properties.shortName + '-' + direction + '.geo.json', geoJSON)
       } catch(e){
+        /* one route only goes in one direction: catching that error here */
         console.error(routeId, direction)
         console.error(e)
       }
@@ -125,19 +132,19 @@ function parseShapes(err, data){
     return a.properties.shortName - b.properties.shortName
   })
 
-// TODO: combine route direction A/B linestrings into multilinestrings for `all.geo.json` to get rid of extra "direction a", "direction b" distinction and make file download smaller
+  // TODO: combine route direction A/B linestrings into multilinestrings for `all.geo.json` to get rid of extra "direction a", "direction b" distinction and make file download smaller?
   let fc = turf.featureCollection(allRoutes)
   write('shapefiles/all.geo.json', fc)
 
-  let elapsed = (new Date() - start) / 1000
-  console.log('took ' + elapsed + 's')
+  /* end timer and alert*/
+  console.timeEnd('Make JSONs')
 }
 
 
 
 
 
-// output the file
+/* output the file */
 function write(filename, text){
   if (typeof text != 'string') text = JSON.stringify(text)
   fs.writeFile(filename, text,

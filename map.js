@@ -10,31 +10,32 @@ busLines = busLines.map(function(item) {
   })
   .reduce(function(a, b) { return a.concat(b) })
 
-var foo = d3.select('#route-titles').selectAll('li')
-.data(busLines)
-.enter()
-.append('li')
-.text(function(d){return d.shortName + ' ' + d.longName + ' direction ' + d.direction})
-.attr('class', function(d){ return 'route'+ d.shortName + d.direction})
-.on("mouseover", function(d){
-  highlightRoute(d.shortName, d.direction)
-})
-.on("mouseout", function(d){
-  unHighlightRoute(d.shortName, d.direction)
-})
-.on('click',function(d){
-  if( d3.select(this).classed('sticky-text') ) {
-    d3.selectAll('#route-titles > li').classed('sticky-text', false)
-    d3.selectAll('.bus-route').classed('sticky-route',false)
-  } else {
-    d3.selectAll('#route-titles > li').classed('sticky-text', false)
-    d3.selectAll('.bus-route')
-        .classed('sticky-route',false)
-    d3.select(this).classed('sticky-text',true)
-    d3.select('path.route' + d.shortName + d.direction)
-      .classed('sticky-route',true)
-  }
-})
+// set up route names list
+d3.select('#route-titles').selectAll('li')
+  .data(busLines)
+  .enter()
+  .append('li')
+  .text(function(d){return d.shortName + ' ' + d.longName + ' direction ' + d.direction})
+  .attr('class', function(d){ return 'route'+ d.shortName + d.direction})
+  .on("mouseover", function(d){
+    highlightRoute(d.shortName, d.direction)
+  })
+  .on("mouseout", function(d){
+    unHighlightRoute(d.shortName, d.direction)
+  })
+  .on('click',function(d){
+    if( d3.select(this).classed('sticky-text') ) {
+      d3.selectAll('#route-titles > li').classed('sticky-text', false)
+      d3.selectAll('.bus-route').classed('sticky-route',false)
+    } else {
+      d3.selectAll('#route-titles > li').classed('sticky-text', false)
+      d3.selectAll('.bus-route')
+          .classed('sticky-route',false)
+      d3.select(this).classed('sticky-text',true)
+      d3.select('path.route' + d.shortName + d.direction)
+        .classed('sticky-route',true)
+    }
+  })
 
 function highlightRoute(name,direction) {
   d3.selectAll('.route'+ name + direction).classed('text-highlight', true).classed('route-highlight', true)
