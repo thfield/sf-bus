@@ -125,6 +125,7 @@ function parseShapes(err, data){
     return a.properties.shortName - b.properties.shortName
   })
 
+// TODO: combine route direction A/B linestrings into multilinestrings for `all.geo.json` to get rid of extra "direction a", "direction b" distinction and make file download smaller
   let fc = turf.featureCollection(allRoutes)
   write('shapefiles/all.geo.json', fc)
 

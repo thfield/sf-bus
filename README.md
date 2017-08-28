@@ -1,10 +1,7 @@
-#sf-bus
+# sf-bus
 overlaying bus routes on a map.
 
 because i couldn't find this anywhere else on the internet.
-
-## data
-data from https://www.sfmta.com/about-sfmta/reports/gtfs-transit-data, downloaded on 2017-02-25
 
 ## libs
 - [csv parse](http://csv.adaltas.com/parse/)
@@ -19,3 +16,14 @@ data from https://www.sfmta.com/about-sfmta/reports/gtfs-transit-data, downloade
 1. run makeGeoJsons.js
 1. ???
 1. profit!
+
+## data
+data from https://www.sfmta.com/about-sfmta/reports/gtfs-transit-data, downloaded on 2017-02-25
+
+### note
+included here since the shapefiles are derived from the sfmta gtfs data:
+```
+Reproduced with permission granted by the City and County of San Francisco. The information has been provided by means of a nonexclusive, limited, and revocable license granted by the City and County of San Francisco.
+
+The City and County of San Francisco does not guarantee the accuracy, adequacy, completeness or usefulness of any information. The City and County of San Francisco provides this information "as is," without warranty of any kind, express or implied, including but not limited to warranties of merchantability or fitness for a particular purpose, and assumes no responsibility for anyone's use of the information.
+```
