@@ -3,6 +3,8 @@ overlaying bus routes on a map.
 
 because i couldn't find this anywhere else on the internet.
 
+medium post about this project [here](https://medium.com/@thfield/adventures-in-amateur-cartography-ad4927ccfccc)
+
 ## libs
 - [csv parse](http://csv.adaltas.com/parse/)
 - [turf js](http://turfjs.org/)
