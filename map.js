@@ -73,6 +73,7 @@ var defs = svg.append("defs")
 defs.append("marker")
 		.attr({
 			"id":"arrow",
+      "class":"bus-route",
 			"viewBox":"0 -5 10 10",
 			"refX":5,
 			"refY":0,
