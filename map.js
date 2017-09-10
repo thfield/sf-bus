@@ -41,10 +41,16 @@ d3.json('lines.json', function(err, busLines){
 })
 
 function highlightRoute(name,direction) {
-  d3.selectAll('.route'+ name + direction).classed('text-highlight', true).classed('route-highlight', true)
+  d3.selectAll('.route'+ name + direction)
+      .classed('text-highlight', true)
+      .classed('route-highlight', true)
+      .attr("marker-mid", "url(#arrow)")
 }
 function unHighlightRoute(name,direction) {
-  d3.selectAll('.route'+ name + direction).classed('text-highlight', false).classed('route-highlight', false)
+  d3.selectAll('.route'+ name + direction)
+      .classed('text-highlight', false)
+      .classed('route-highlight', false)
+      .attr("marker-mid", null)
 }
 
 
@@ -62,6 +68,21 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?acce
 var svg = d3.select(map.getPanes().overlayPane).append("svg"),
     g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
+var defs = svg.append("defs")
+
+defs.append("marker")
+		.attr({
+			"id":"arrow",
+			"viewBox":"0 -5 10 10",
+			"refX":5,
+			"refY":0,
+			"markerWidth":4,
+			"markerHeight":4,
+			"orient":"auto"
+		})
+		.append("path")
+			.attr("d", "M0,-3L5,0L0,3")
+			.attr("class","arrowHead");
 
 d3_queue.queue()
     .defer(d3.json, "./shapefiles/all.geo.json")
@@ -84,6 +105,9 @@ function mapDraw(err, collection){
         .enter()
         .append("path")
         .attr('d', path)
+        // .attr("marker-end", "url(#arrow)")
+        // .attr("marker-start", "url(#arrow)")
+        // .attr("marker-mid", "url(#arrow)")
         .attr("class", function(d){
           return 'bus-route route' + d.properties.shortName + d.properties.direction;
         })
