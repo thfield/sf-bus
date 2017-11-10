@@ -4,7 +4,8 @@
   "description": "overlaying bus routes on a map.",
   "main": "makeGeoJsons.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "data": "./getData.sh"
   },
   "author": "",
   "license": "ISC",

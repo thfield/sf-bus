@@ -13,11 +13,8 @@ medium post about this project [here](https://medium.com/@thfield/adventures-in-
 - [mapbox](http://mapbox.com)
 
 ## steps
-1. download data from [sfmta](https://www.sfmta.com/about-sfmta/reports/gtfs-transit-data)
-1. unzip
-1. run makeGeoJsons.js
-1. ???
-1. profit!
+1. `npm install`
+1. `npm run data`
 
 ## todos
 - use [transit feeds](http://transitfeeds.com/p/sfmta/60) for gtfs data

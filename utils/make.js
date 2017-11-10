@@ -1,6 +1,5 @@
 'use strict'
 const d3 = require('d3-collection')
-const nestedFind = require('./nestedFind')
 
 /** @function makeRoutesMap
  * @param {object[]} data - array created from routes.txt
@@ -41,7 +40,12 @@ function makeShapesMap (data) {
 function makeTripsMap (data) {
   let tripMap = new Map()
   data.forEach(el => {
-    tripMap.set(el.shape_id, {headsign: el.trip_headsign, route_id: el.route_id, service_id: el.service_id})
+    tripMap.set(el.shape_id, {
+      direction: el.direction_id,
+      headsign: el.trip_headsign,
+      route_id: el.route_id,
+      service_id: el.service_id
+    })
   })
   return tripMap
 }
@@ -55,11 +59,47 @@ function makeTripsFreqNest (data) {
   return d3.nest()
     .key(function (d) { return d.route_id })
     .key(function (d) { return d.service_id })
-    .key(function (d) { return `${d.shape_id}` })
+    .key(function (d) { return d.direction_id })
+    .key(function (d) { return d.shape_id })
     .rollup(function (v) {
       return v.length
     })
     .entries(data)
+}
+
+/** @function mostFrequentTrips
+ * @param {object[]} data - return value from makeTripsFreqNest
+ */
+function mostFrequentTrips (data) {
+  return data.map(function (route) {
+    let services = route.values.map(function (service) {
+      let services = service.values.map(function (direction) {
+        let v = mostFrequentShape(direction.values)
+        return {direction_id: direction.key, shape_id: v}
+      })
+      return {service_id: service.key, values: services}
+    })
+    return {route_id: route.key, values: services}
+  })
+}
+
+/** @function makeLineList
+ * @param data - Map created with makeRoutesMap
+ * @returns {array} - a list of the lines {shortName, longName}
+ */
+function makeLineList (data) {
+  return valuesOfMap(data)
+}
+
+// ############### helper functions ###############
+
+/** @function valuesOfMap
+ * get an array of the values from a Map
+ * @param {map} map
+ * @returns {array} an array of the values of map
+ */
+function valuesOfMap (map) {
+  return Array.from(map).map(d => d[1])
 }
 
 /** @function mostFrequentShape
@@ -71,28 +111,11 @@ function mostFrequentShape (data) {
   return res[0].key
 }
 
-/** @function mostFrequentTrips
- * @param {object[]} data - return value from makeTripsFreqNest
- */
-function mostFrequentTrips (data) {
-  return data.map(function (shape) {
-    let freqs = shape.values.map(function (sId) {
-      let v = mostFrequentShape(sId.values)
-      return {service_id: sId.key, shape_id: v}
-    })
-    return {route_id: shape.key, freq: freqs}
-  })
-}
-
-function geoJsonShape () {
-
-}
-
 module.exports = {
   routesMap: makeRoutesMap,
   shapesMap: makeShapesMap,
   tripsFreqNest: makeTripsFreqNest,
   tripsMap: makeTripsMap,
-  // mostFrequentShape: mostFrequentShape,
-  mostFrequentTrips: mostFrequentTrips
+  mostFrequentTrips: mostFrequentTrips,
+  lineList: makeLineList
 }
