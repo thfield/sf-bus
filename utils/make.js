@@ -91,6 +91,23 @@ function makeLineList (data) {
   return data.map(d => { return { shortName: d.route_short_name, longName: d.route_long_name } })
 }
 
+/** @function busType
+ * determine what kind of transit the route is
+ * @param shortName
+ * @returns array
+ */
+function busType (shortName) {
+  let cablecars = ['PM', 'PH', 'C']
+  let streetcars = ['E', 'F', 'J', 'K/T', 'L', 'M', 'N']
+  let res = []
+  if (shortName.includes('R')) res.push('rapid')
+  if (shortName.includes('X')) res.push('express')
+  if (shortName.includes('OWL')) res.push('owl')
+  if (cablecars.includes(shortName)) res.push('cablecar')
+  if (streetcars.includes(shortName)) res.push('streetcar')
+  return res
+}
+
 // ############### helper functions ###############
 
 /** @function valuesOfMap
@@ -117,5 +134,6 @@ module.exports = {
   tripsFreqNest: makeTripsFreqNest,
   tripsMap: makeTripsMap,
   mostFrequentTrips: mostFrequentTrips,
-  lineList: makeLineList
+  lineList: makeLineList,
+  busType: busType
 }

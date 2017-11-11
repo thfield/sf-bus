@@ -16,5 +16,5 @@ function combine (error, files) {
     features.push(require(`${path}/${filename}`))
   })
 
-  return write(`${path}/combined.geo.json`, turf.featureCollection(features))
+  return write(`./combined.geo.json`, turf.featureCollection(features))
 }

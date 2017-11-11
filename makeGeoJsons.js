@@ -54,13 +54,6 @@ mostFreqTrips.forEach(function (route) {
   })
 })
 
-write(`foo-shapesMap.json`, Array.from(shapesMap))
-write(`foo-routesMap.json`, Array.from(routesMap))
-write(`foo-tripsMap.json`, Array.from(tripsMap))
-write(`foo-tripsFreqs.json`, Array.from(tripsFreqs))
-write(`foo-mostFreqTrips.json`, Array.from(mostFreqTrips))
-write(`foo-routeShapes.json`, Array.from(routeShapes))
-
 routeShapes.forEach(function (data, shapeid) {
   let props = {
     shortName: data.props.shortName,
@@ -68,7 +61,8 @@ routeShapes.forEach(function (data, shapeid) {
     route: data.props.route,
     headsign: data.props.services[0][2],
     direction: data.props.services[0][1],
-    service_ids: data.props.services.map(d => d[0])
+    service_ids: data.props.services.map(d => d[0]),
+    busType: make.busType(data.props.shortName)
   }
   let geoJson = turf.lineString(data.geo, props)
   if (props.shortName.includes('/')) { props.shortName = props.shortName.replace(/\//, '-') }
