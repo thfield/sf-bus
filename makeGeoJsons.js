@@ -32,8 +32,8 @@ let routesMap = make.routesMap(routes)
 let tripsMap = make.tripsMap(trips)
 let tripsFreqs = make.tripsFreqNest(trips)
 let mostFreqTrips = make.mostFrequentTrips(tripsFreqs)
-
 let routeShapes = new Map()
+
 mostFreqTrips.forEach(function (route) {
   route.values.forEach(function (service) {
     service.values.forEach(function (trip) {
@@ -54,6 +54,13 @@ mostFreqTrips.forEach(function (route) {
   })
 })
 
+write(`foo-shapesMap.json`, Array.from(shapesMap))
+write(`foo-routesMap.json`, Array.from(routesMap))
+write(`foo-tripsMap.json`, Array.from(tripsMap))
+write(`foo-tripsFreqs.json`, Array.from(tripsFreqs))
+write(`foo-mostFreqTrips.json`, Array.from(mostFreqTrips))
+write(`foo-routeShapes.json`, Array.from(routeShapes))
+
 routeShapes.forEach(function (data, shapeid) {
   let props = {
     shortName: data.props.shortName,
@@ -64,10 +71,11 @@ routeShapes.forEach(function (data, shapeid) {
     service_ids: data.props.services.map(d => d[0])
   }
   let geoJson = turf.lineString(data.geo, props)
+  if (props.shortName.includes('/')) { props.shortName = props.shortName.replace(/\//, '-') }
   write(`${outPath}/${props.shortName}-${props.direction}.geo.json`, geoJson)
 })
 
-let lines = make.lineList(routesMap)
+let lines = make.lineList(routes)
 write('lines.json', lines)
 
 console.timeEnd('Make JSONs')

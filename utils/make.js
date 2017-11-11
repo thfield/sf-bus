@@ -84,11 +84,11 @@ function mostFrequentTrips (data) {
 }
 
 /** @function makeLineList
- * @param data - Map created with makeRoutesMap
+ * @param data - csv-parsed routes.txt
  * @returns {array} - a list of the lines {shortName, longName}
  */
 function makeLineList (data) {
-  return valuesOfMap(data)
+  return data.map(d => { return { shortName: d.route_short_name, longName: d.route_long_name } })
 }
 
 // ############### helper functions ###############
