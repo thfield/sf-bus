@@ -1,5 +1,5 @@
 // download bus line names and set up selector list
-d3.json('lines.json', function(err, busLines){
+d3.json('../lines.json', function(err, busLines){
   if (err) console.error(err)
 
   // make directions 'A' and 'B'
@@ -86,7 +86,7 @@ defs.append("marker")
 			.attr("class","arrowHead");
 
 d3_queue.queue()
-    .defer(d3.json, "./shapefiles/all.geo.json")
+    .defer(d3.json, "../geojson/combined.geo.json")
     .await(mapDraw)
 
 // function showOneRoute (routeId) {

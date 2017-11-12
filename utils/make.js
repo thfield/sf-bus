@@ -99,12 +99,12 @@ function makeLineList (data) {
 function busType (shortName) {
   let cablecars = ['PM', 'PH', 'C']
   let streetcars = ['E', 'F', 'J', 'K/T', 'L', 'M', 'N']
-  let res = []
-  if (shortName.includes('R')) res.push('rapid')
-  if (shortName.includes('X')) res.push('express')
-  if (shortName.includes('OWL')) res.push('owl')
-  if (cablecars.includes(shortName)) res.push('cablecar')
-  if (streetcars.includes(shortName)) res.push('streetcar')
+  let res = ''
+  if (shortName.includes('R')) res = 'rapid'
+  if (shortName.includes('X')) res = 'express'
+  if (shortName.includes('OWL')) res = 'owl'
+  if (cablecars.includes(shortName)) res = 'cablecar'
+  if (streetcars.includes(shortName)) res = 'streetcar'
   return res
 }
 
