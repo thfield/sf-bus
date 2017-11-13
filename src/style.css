@@ -9,10 +9,10 @@ body { margin:0; padding:0; }
   overflow: auto;
   background: rgba(255, 255, 255, 0.8);
 }
-.routeselect {
+.route-list {
   cursor: pointer;
 }
-.routeselect li:hover {
+.route-list li:hover {
   color: #b514de;
 }
 .hl {

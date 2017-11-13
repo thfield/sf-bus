@@ -1,11 +1,7 @@
 import './style.css'
 import './mapbox-gl.css'
 import mapboxgl from 'mapbox-gl'
-
-let infobox = document.getElementById('info')
-let ul = document.createElement('ul')
-ul.setAttribute('class', 'routeselect')
-infobox.appendChild(ul)
+import lines from './lines.json'
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidGhmaWVsZCIsImEiOiI4YTA3MmJkY2Q0OTg0YTkzMDAxOWQ3NzIyMzQ3NjIzOSJ9.LxGif2Jlko59H3l5yUvZug'
 var map = new mapboxgl.Map({
@@ -14,6 +10,20 @@ var map = new mapboxgl.Map({
   zoom: 12,
   center: [-122.447303, 37.753574]
 })
+
+let allLines = document.getElementById('all-routes')
+let linesList = document.createElement('ul')
+lines.forEach(function (line) {
+  createLI(line, linesList)
+})
+allLines.appendChild(linesList)
+
+let infobox = document.getElementById('info')
+let ul = document.createElement('ul')
+ul.setAttribute('class', 'routeselect')
+infobox.appendChild(ul)
+
+let highlightColor = '#b514de'
 
 // GeoJSON object to hold our measurement features
 var geojson = {
@@ -33,7 +43,7 @@ map.on('load', function () {
     'source': 'routes',
     'source-layer': 'sf-bus',
     'paint': {
-      'line-color': '#b514de',
+      'line-color': highlightColor,
       'line-width': 5,
       'line-opacity': 1
     },
@@ -113,25 +123,25 @@ function highlightNearClick (e) {
   let resetButton = document.querySelector('#reset')
   // resetButton.removeEventListener('click')
   resetButton.addEventListener('click', function (e) {
-    document.querySelector('.routeselect').childNodes.forEach(function (e) {e.classList.remove('hl')})
+    document.querySelector('.routeselect').childNodes.forEach(function (e) { e.classList.remove('hl') })
     map.setFilter('bus-routes-highlighted', ['all', filterName, filterDirection])
   })
+}
 
-  function createLI (data, parentEl) {
-    let listitem = document.createElement('li')
-    let dataKeys = Object.keys(data).filter(d => { return d.includes('data-') })
-    dataKeys.forEach(function (d) { return listitem.setAttribute(d, data[d]) })
-    let text = document.createTextNode(data.text)
-    listitem.appendChild(text)
-    listitem.addEventListener('click', function (e) {
-      this.parentElement.childNodes.forEach(function (e) {e.classList.remove('hl')})
-      this.classList.add('hl')
-      map.setFilter('bus-routes-highlighted', ['all', ['in', 'shortName', this.dataset.shortname], ['in', 'direction', this.dataset.direction]])
-      // map.setFilter('bus-routes-highlighted', ['in', 'shortName', this.dataset.shortname])
-    })
+function createLI (data, parentEl) {
+  let listitem = document.createElement('li')
+  let dataKeys = Object.keys(data).filter(d => { return d.includes('data-') })
+  dataKeys.forEach(function (d) { return listitem.setAttribute(d, data[d]) })
+  let text = document.createTextNode(data.text)
+  listitem.appendChild(text)
+  listitem.addEventListener('click', function (e) {
+    this.parentElement.childNodes.forEach(function (e) { e.classList.remove('hl') })
+    this.classList.add('hl')
+    map.setFilter('bus-routes-highlighted', ['all', ['in', 'shortName', this.dataset.shortname], ['in', 'direction', this.dataset.direction]])
+    // map.setFilter('bus-routes-highlighted', ['in', 'shortName', this.dataset.shortname])
+  })
 
-    return parentEl.appendChild(listitem)
-  }
+  return parentEl.appendChild(listitem)
 }
 
 function createFilter (features, prop) {

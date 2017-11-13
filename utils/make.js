@@ -88,16 +88,24 @@ function mostFrequentTrips (data) {
  * @returns {array} - a list of the lines {shortName, longName}
  */
 function makeLineList (data, routesTrips) {
-  return data.map(d => {
-    let obj = { shortName: d.route_short_name, longName: d.route_long_name }
-    if (routesTrips) {
-      obj.headsigns = [
-        routesTrips.get(d.route_id + '-0'),
-        routesTrips.get(d.route_id + '-1')
-      ]
-    }
-    return obj
+  let res = []
+  data.forEach(d => {
+    let headsigns = [
+      routesTrips.get(d.route_id + '-0'),
+      routesTrips.get(d.route_id + '-1')
+    ]
+    headsigns.forEach(function (el, i) {
+      let obj = {
+        text: `${d.route_short_name} ${d.route_long_name} - ${headsigns[i]}`,
+        'data-direction': i,
+        'data-shortName': d.route_short_name,
+        'data-longName': d.route_long_name,
+        'data-headsign': headsigns[i]
+      }
+      res.push(obj)
+    })
   })
+  return res
 }
 
 /** @function busType
