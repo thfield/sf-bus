@@ -87,8 +87,17 @@ function mostFrequentTrips (data) {
  * @param data - csv-parsed routes.txt
  * @returns {array} - a list of the lines {shortName, longName}
  */
-function makeLineList (data) {
-  return data.map(d => { return { shortName: d.route_short_name, longName: d.route_long_name } })
+function makeLineList (data, routesTrips) {
+  return data.map(d => {
+    let obj = { shortName: d.route_short_name, longName: d.route_long_name }
+    if (routesTrips) {
+      obj.headsigns = [
+        routesTrips.get(d.route_id + '-0'),
+        routesTrips.get(d.route_id + '-1')
+      ]
+    }
+    return obj
+  })
 }
 
 /** @function busType

@@ -54,11 +54,12 @@ mostFreqTrips.forEach(function (route) {
   })
 })
 
+let routesTrips = new Map()
 routeShapes.forEach(function (data, shapeid) {
   let props = {
     shortName: data.props.shortName,
     longName: data.props.longName,
-    route: data.props.route,
+    route: data.route,
     headsign: data.props.services[0][2],
     direction: data.props.services[0][1],
     service_ids: data.props.services.map(d => d[0]),
@@ -67,9 +68,21 @@ routeShapes.forEach(function (data, shapeid) {
   let geoJson = turf.lineString(data.geo, props)
   if (props.shortName.includes('/')) { props.shortName = props.shortName.replace(/\//, '-') }
   write(`${outPath}/${props.shortName}-${props.direction}.geo.json`, geoJson)
+  routesTrips.set(`${props.route}-${props.direction}`, props.headsign)
 })
 
-let lines = make.lineList(routes)
-write('lines.json', lines)
+let lines = make.lineList(routes, routesTrips)
+write('./src/lines.json', lines)
 
 console.timeEnd('Make JSONs')
+
+// writeMapsToDisk()
+function writeMapsToDisk () {
+  write('fooshapesMap.json', Array.from(shapesMap))
+  write('fooroutesMap.json', Array.from(routesMap))
+  write('footripsMap.json', Array.from(tripsMap))
+  write('footripsFreqs.json', Array.from(tripsFreqs))
+  write('foomostFreqTrips.json', Array.from(mostFreqTrips))
+  write('foorouteShapes.json', Array.from(routeShapes))
+  write('fooroutesTrips.json', Array.from(routesTrips))
+}
