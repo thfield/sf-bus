@@ -18,10 +18,14 @@
 </head>
 <body>
   <div id="map"></div>
-  <div id="info" class="route-list">
-    <button id="reset">RESET</button>
+  <div id="tabswitcher">
+    <div class="tab" data-target="all-routes" id="all">all</div>
+    <div class="tab" data-target="highlit-routes" id="highlighted">highligted</div>
   </div>
-  <div id="all-routes" class="route-list"></div>
+  <div id="highlit-routes" class="route-list aside hidden">
+    <button id="reset">show all highlight</button>
+  </div>
+  <div id="all-routes" class="route-list aside"></div>
 
 </body>
 </html>

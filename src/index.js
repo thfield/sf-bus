@@ -11,6 +11,12 @@ var map = new mapboxgl.Map({
   center: [-122.447303, 37.753574]
 })
 
+document.querySelectorAll('.tab').forEach(function (t) {
+  t.addEventListener('click', function (e) {
+    tabSwitch(this.dataset.target, 'route-list')
+  })
+})
+
 let allLines = document.getElementById('all-routes')
 let linesList = document.createElement('ul')
 lines.forEach(function (line) {
@@ -18,14 +24,14 @@ lines.forEach(function (line) {
 })
 allLines.appendChild(linesList)
 
-let infobox = document.getElementById('info')
+let highlightEl = document.getElementById('highlit-routes')
 let ul = document.createElement('ul')
 ul.setAttribute('class', 'routeselect')
-infobox.appendChild(ul)
+highlightEl.appendChild(ul)
 
 let highlightColor = '#b514de'
 
-// GeoJSON object to hold our measurement features
+// GeoJSON object to hold highlight layer
 var geojson = {
   'type': 'FeatureCollection',
   'features': []
@@ -101,7 +107,7 @@ function highlightNearClick (e) {
   var filterName = createFilter(features, 'shortName')
   var filterDirection = createFilter(features, 'direction')
   var filterHeadsign = createFilter(features, 'headsign')
-// BUG: click on pine & powell: both 1AX california directions are highlighted on map
+
   map.setFilter('bus-routes-highlighted', ['all', filterName, filterHeadsign])
 
   var pin = {
@@ -120,6 +126,8 @@ function highlightNearClick (e) {
 
   map.getSource('geojson').setData(pin)
 
+  tabSwitch('highlit-routes', 'route-list')
+
   let resetButton = document.querySelector('#reset')
   // resetButton.removeEventListener('click')
   resetButton.addEventListener('click', function (e) {
@@ -137,10 +145,12 @@ function createLI (data, parentEl) {
   listitem.addEventListener('click', function (e) {
     this.parentElement.childNodes.forEach(function (e) { e.classList.remove('hl') })
     this.classList.add('hl')
-    map.setFilter('bus-routes-highlighted', ['all', ['in', 'shortName', this.dataset.shortname], ['in', 'direction', this.dataset.direction]])
-    // map.setFilter('bus-routes-highlighted', ['in', 'shortName', this.dataset.shortname])
+    map.setFilter('bus-routes-highlighted', [
+      'all',
+      ['in', 'shortName', this.dataset.shortname],
+      ['in', 'direction', this.dataset.direction]
+    ])
   })
-
   return parentEl.appendChild(listitem)
 }
 
@@ -151,3 +161,8 @@ function createFilter (features, prop) {
   }, ['in', prop])
 }
 
+function tabSwitch (toShowId, targetClass) {
+  let foo = document.querySelectorAll(`.${targetClass}`)
+  foo.forEach(e => e.classList.add('hidden'))
+  document.querySelector(`#${toShowId}`).classList.remove('hidden')
+}
