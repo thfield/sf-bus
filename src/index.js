@@ -1,5 +1,6 @@
-// import './style.css'
-// var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js')
+import './style.css'
+import './mapbox-gl.css'
+import mapboxgl from 'mapbox-gl'
 
 let infobox = document.getElementById('info')
 let ul = document.createElement('ul')
