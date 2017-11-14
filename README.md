@@ -3,7 +3,7 @@ overlaying bus routes on a map.
 
 because i couldn't find this anywhere else on the internet.
 
-medium post about this project [here](https://medium.com/@thfield/adventures-in-amateur-cartography-ad4927ccfccc)
+medium post about v1 of this project [here](https://medium.com/@thfield/adventures-in-amateur-cartography-ad4927ccfccc)
 
 ## dependencies
 - [csv parse](http://csv.adaltas.com/parse/)
@@ -11,7 +11,7 @@ medium post about this project [here](https://medium.com/@thfield/adventures-in-
 - [d3](http://d3js.org)
 - [mapbox](http://mapbox.com)
 - [leaflet](http://leafletjs.com)
-- ~~[webpack](https://webpack.js.org/)~~
+- [webpack](https://webpack.js.org/)
 
 
 ## steps
@@ -19,7 +19,6 @@ medium post about this project [here](https://medium.com/@thfield/adventures-in-
 1. `npm run data`
 
 ## todos
-- click map and select all routes near the click, narrow list to click and show the network "where can i go from here?"
 - tie into nextbus data feed, show the next bus to arrive at my location
 - locate user initially http://freegeoip.net/ or https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
 - turn makeGeoJsons.js into an npm module for gtfs->geojson (?)

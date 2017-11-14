@@ -1,6 +1,6 @@
 {
   "name": "sf-bus",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "overlaying bus routes on a map.",
   "main": "makeGeoJsons.js",
   "scripts": {

@@ -1,39 +1,40 @@
 body {
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
 #map {
   position:absolute;
   top:0;
   bottom:0;
   width:100%;
+  z-index: 1;
 }
 .aside {
   position: absolute;
-  top: 20px;
-  right: 0;
-  bottom: 0;
-  width: 300px;
-  overflow: auto;
-  background: rgba(255, 255, 255, 0.8);
-  font-family: sans-serif;
-  font-size: 9pt;
-}
-#tabswitcher {
-  position: absolute;
   top: 0;
   right: 0;
-  /*bottom: 20px;*/
-  width: 300px;
-  height: 20px;
-  overflow: auto;
-  background: rgba(255, 255, 255, 1);
+  bottom: 0;
+  width: 0;
+  /*width: 300px;*/
   font-family: sans-serif;
   font-size: 9pt;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.8);
+  transition: 0.5s;
+  z-index: 2;
+}
+#tab-switcher {
+  top: 0;
+  height: 20px;
+  background: rgba(255, 255, 255, 1);
+  font-size: 9pt;
+}
+#tab-panels {
+
 }
 .tab {
   display: inline-block;
-  width: 45%;
   height: 15px;
   cursor: pointer;
   margin: 1px auto 1px;
@@ -46,15 +47,23 @@ body {
 .route-list {
   cursor: pointer;
 }
-.route-list li {
+.route-list ul {
   list-style-type: none;
+  padding-left: 0.5rem;
 }
 .route-list li:hover {
-  color: #b514de;
+  color: #e09600;
 }
 .hl {
-  color: #b514de;
+  color: #e09600;
 }
 .hidden {
   display: none;
+}
+.slidertoggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  z-index: 100;
 }

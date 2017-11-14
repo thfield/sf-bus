@@ -2,6 +2,7 @@ import './style.css'
 import './mapbox-gl.css'
 import mapboxgl from 'mapbox-gl'
 import lines from './lines.json'
+import tabSwitch from '../utils/tabSwitch.js'
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidGhmaWVsZCIsImEiOiI4YTA3MmJkY2Q0OTg0YTkzMDAxOWQ3NzIyMzQ3NjIzOSJ9.LxGif2Jlko59H3l5yUvZug'
 var map = new mapboxgl.Map({
@@ -10,6 +11,21 @@ var map = new mapboxgl.Map({
   zoom: 12,
   center: [-122.447303, 37.753574]
 })
+map.addControl(new mapboxgl.NavigationControl(), 'top-left')
+map.on('load', drawMap)
+
+function openNav () {
+  document.querySelector('.aside').style.width = '300px'
+  document.querySelector('#expand').style.display = 'none'
+}
+
+function closeNav () {
+  document.querySelector('.aside').style.width = '0'
+  document.querySelector('#expand').style.display = 'block'
+}
+
+document.querySelector('#expand').addEventListener('click', openNav)
+document.querySelector('#collapse').addEventListener('click', closeNav)
 
 document.querySelectorAll('.tab').forEach(function (t) {
   t.addEventListener('click', function (e) {
@@ -20,6 +36,7 @@ document.querySelectorAll('.tab').forEach(function (t) {
 let allLines = document.getElementById('all-routes')
 let linesList = document.createElement('ul')
 lines.forEach(function (line) {
+  // if (line['data-bustype'] === 'owl') return
   createLI(line, linesList)
 })
 allLines.appendChild(linesList)
@@ -29,7 +46,7 @@ let ul = document.createElement('ul')
 ul.setAttribute('class', 'routeselect')
 highlightEl.appendChild(ul)
 
-let highlightColor = '#b514de'
+let highlightColor = '#e09600'
 
 // GeoJSON object to hold highlight layer
 var geojson = {
@@ -37,7 +54,7 @@ var geojson = {
   'features': []
 }
 
-map.on('load', function () {
+function drawMap () {
   map.addSource('routes', {
     'type': 'vector',
     'url': 'mapbox://thfield.cj9uf6cwt73q22qlgopvm0707-7g4hb'
@@ -67,15 +84,15 @@ map.on('load', function () {
     source: 'geojson',
     paint: {
       'circle-radius': 10,
-      'circle-color': '#000',
+      'circle-color': highlightColor,
       'circle-opacity': 0.5,
       'circle-stroke-width': 3,
-      'circle-stroke-color': '#329e39'
+      'circle-stroke-color': '#000'
     },
     filter: ['in', '$type', 'Point']
   })
   map.on('click', highlightNearClick)
-})
+}
 
 function highlightNearClick (e) {
   // set bbox as {extent}px reactangle area around clicked point
@@ -91,25 +108,22 @@ function highlightNearClick (e) {
       'data-headsign': f.properties.headsign
     }
   })
-
-  while (ul.firstChild) {
-    ul.removeChild(ul.firstChild)
-  }
-
   routes.sort(function (a, b) {
     return (a['data-shortName'] < b['data-shortName']) ? -1 : 1
   })
 
+  // remove list of highlighted routes
+  while (ul.firstChild) {
+    ul.removeChild(ul.firstChild)
+  }
+  // create new list of highlighted routes
   routes.forEach(function (route) {
+    // if (!document.querySelector('#showOwl').checked && route['data-longName'].includes('OWL')) {
+    //   return
+    // }
     return createLI(route, ul)
   })
-
-  var filterName = createFilter(features, 'shortName')
-  var filterDirection = createFilter(features, 'direction')
-  var filterHeadsign = createFilter(features, 'headsign')
-
-  map.setFilter('bus-routes-highlighted', ['all', filterName, filterHeadsign])
-
+  // draw "magnifying glass pin" circle around where map clicked
   var pin = {
     'type': 'Feature',
     'geometry': {
@@ -123,17 +137,35 @@ function highlightNearClick (e) {
       'id': String(new Date().getTime())
     }
   }
-
   map.getSource('geojson').setData(pin)
 
+  // change to highlight tab
   tabSwitch('highlit-routes', 'route-list')
 
+  var filterName = createFilter(features, 'shortName')
+  var filterHeadsign = createFilter(features, 'headsign')
+
+  // filter routes drawn on map
+  let filters = ['all', filterName, filterHeadsign]
+  // if (document.querySelector('#showOwl').checked) {
+  //   filters.push(['!=', 'busType', 'owl'])
+  // }
+  map.setFilter('bus-routes-highlighted', filters)
+
   let resetButton = document.querySelector('#reset')
-  // resetButton.removeEventListener('click')
+  if (resetButton) resetButton.remove()
+  resetButton = document.createElement('button')
+  resetButton.id = 'reset'
+  resetButton.innerHTML = 'show all highlighted routes'
   resetButton.addEventListener('click', function (e) {
+    let filters = ['all', filterName, filterHeadsign]
+    // if (!document.querySelector('#showOwl').checked) {
+    //   filters.push(['!=', 'busType', 'owl'])
+    // }
     document.querySelector('.routeselect').childNodes.forEach(function (e) { e.classList.remove('hl') })
-    map.setFilter('bus-routes-highlighted', ['all', filterName, filterDirection])
+    map.setFilter('bus-routes-highlighted', filters)
   })
+  highlightEl.appendChild(resetButton)
 }
 
 function createLI (data, parentEl) {
@@ -145,11 +177,15 @@ function createLI (data, parentEl) {
   listitem.addEventListener('click', function (e) {
     this.parentElement.childNodes.forEach(function (e) { e.classList.remove('hl') })
     this.classList.add('hl')
-    map.setFilter('bus-routes-highlighted', [
+    let filters = [
       'all',
       ['in', 'shortName', this.dataset.shortname],
-      ['in', 'direction', this.dataset.direction]
-    ])
+      ['in', 'headsign', this.dataset.headsign]
+    ]
+    // if (!document.querySelector('#showOwl').checked) {
+    //   filters.push(['!=', 'busType', 'owl'])
+    // }
+    map.setFilter('bus-routes-highlighted', filters)
   })
   return parentEl.appendChild(listitem)
 }
@@ -159,10 +195,4 @@ function createFilter (features, prop) {
     memo.push(feature.properties[prop])
     return memo
   }, ['in', prop])
-}
-
-function tabSwitch (toShowId, targetClass) {
-  let foo = document.querySelectorAll(`.${targetClass}`)
-  foo.forEach(e => e.classList.add('hidden'))
-  document.querySelector(`#${toShowId}`).classList.remove('hidden')
 }

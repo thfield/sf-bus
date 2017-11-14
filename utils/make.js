@@ -100,7 +100,8 @@ function makeLineList (data, routesTrips) {
         'data-direction': i,
         'data-shortName': d.route_short_name,
         'data-longName': d.route_long_name,
-        'data-headsign': headsigns[i]
+        'data-headsign': headsigns[i],
+        'data-bustype': busType(d.route_short_name)
       }
       res.push(obj)
     })
