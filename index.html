@@ -19,15 +19,22 @@
   <link href='https://api.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
 </head>
 <body>
+  <div class="slidertoggle" id="expand">&#9776; open</div>
   <div id="map"></div>
-  <div id="tabswitcher">
-    <div class="tab" data-target="all-routes" id="all">all</div>
-    <div class="tab" data-target="highlit-routes" id="highlighted">highligted</div>
+  <div class="aside">
+    <div id="tab-switcher">
+      <div class="tab" data-target="all-routes" id="all">all</div>
+      <div class="tab" data-target="highlit-routes" id="highlighted">highlighted</div>
+      <span class="slidertoggle" id="collapse">&times; hide</span>
+      <!-- <input type="checkbox" id="showOwl"><label for="showOwl">Show Owl</label> -->
+    </div>
+    <div id="tab-panels">
+      <div id="highlit-routes" class="route-list hidden"></div>
+      <div id="all-routes" class="route-list"></div>
+    </div>
   </div>
-  <div id="highlit-routes" class="route-list aside hidden">
-    <button id="reset">show all highlight</button>
-  </div>
-  <div id="all-routes" class="route-list aside"></div>
+
+
 
 <script type="text/javascript" src="app.bundle.js"></script></body>
 </html>
