@@ -114,6 +114,7 @@ function makeLineList (data, routesTrips) {
  * @param shortName
  * @returns array
  */
+ // TODO: 91 OWL does not have "owl" in shortname, use lLongnames instead
 function busType (shortName) {
   let cablecars = ['PM', 'PH', 'C']
   let streetcars = ['E', 'F', 'J', 'K/T', 'L', 'M', 'N']

@@ -9,7 +9,8 @@ var map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/thfield/cj9ug3fgn3vtu2su96gcihye1',
   zoom: 12,
-  center: [-122.447303, 37.753574]
+  center: [-122.447303, 37.753574],
+  maxBounds: [ [-122.6, 37.65], [-122.3, 37.9] ]
 })
 map.addControl(new mapboxgl.NavigationControl(), 'top-left')
 map.on('load', drawMap)

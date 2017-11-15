@@ -15,6 +15,8 @@ function combine (error, files) {
     if (filename === '.DS_Store') return
     features.push(require(`${path}/${filename}`))
   })
-
-  return write(`./combined.geo.json`, turf.featureCollection(features))
+  let geojson = turf.featureCollection(features)
+  let bbox = turf.bbox(geojson)
+  console.log(bbox)
+  return write(`./combined.geo.json`, geojson)
 }
