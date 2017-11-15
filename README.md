@@ -17,6 +17,7 @@ medium post about v1 of this project [here](https://medium.com/@thfield/adventur
 ## steps
 1. `npm install`
 1. `npm run data`
+1. `npm run start`
 
 ## todos
 - tie into nextbus data feed, show the next bus to arrive at my location
@@ -33,7 +34,7 @@ medium post about v1 of this project [here](https://medium.com/@thfield/adventur
 
 
 ## data
-data from https://www.sfmta.com/about-sfmta/reports/gtfs-transit-data, downloaded on 2017-02-25
+data from (http://transitfeeds.com/p/sfmta/60, downloaded on 2017-11-14
 
 ### note
 included here since the shapefiles are derived from the sfmta gtfs data:
@@ -43,12 +44,12 @@ Reproduced with permission granted by the City and County of San Francisco. The 
 The City and County of San Francisco does not guarantee the accuracy, adequacy, completeness or usefulness of any information. The City and County of San Francisco provides this information "as is," without warranty of any kind, express or implied, including but not limited to warranties of merchantability or fitness for a particular purpose, and assumes no responsibility for anyone's use of the information.
 ```
 
-
-https://www.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures-around-point/
-https://www.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/
-https://www.mapbox.com/mapbox-gl-js/example/color-switcher/
-https://www.mapbox.com/mapbox-gl-js/example/restrict-bounds/
-https://www.mapbox.com/mapbox-gl-js/example/filter-markers/
-https://www.mapbox.com/mapbox-gl-js/example/measure/
-https://www.mapbox.com/mapbox-gl-js/example/data-driven-circle-colors/
-https://www.mapbox.com/mapbox-gl-js/example/geojson-line/
+## mapbox examples
+- https://www.mapbox.com/mapbox-gl-js/example/queryrenderedfeatures-around-point/
+- https://www.mapbox.com/mapbox-gl-js/example/polygon-popup-on-click/
+- https://www.mapbox.com/mapbox-gl-js/example/color-switcher/
+- https://www.mapbox.com/mapbox-gl-js/example/restrict-bounds/
+- https://www.mapbox.com/mapbox-gl-js/example/filter-markers/
+- https://www.mapbox.com/mapbox-gl-js/example/measure/
+- https://www.mapbox.com/mapbox-gl-js/example/data-driven-circle-colors/
+- https://www.mapbox.com/mapbox-gl-js/example/geojson-line/
