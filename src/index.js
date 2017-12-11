@@ -1,6 +1,6 @@
 import './style.css'
-// import './mapbox-gl.css'
-// import mapboxgl from 'mapbox-gl'
+import './mapbox-gl.css'
+import mapboxgl from 'mapbox-gl'
 import lines from './lines.json'
 import tabSwitch from '../utils/tabSwitch.js'
 import {point} from '@turf/helpers'

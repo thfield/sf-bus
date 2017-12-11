@@ -5,6 +5,11 @@ because i couldn't find this anywhere else on the internet.
 
 medium post about v1 of this project [here](https://medium.com/@thfield/adventures-in-amateur-cartography-ad4927ccfccc)
 
+## how to use
+click once to highlight bus routes under the click.  click again on a highlighted route to "superhighlight" routes under that click. click elsewhere to reset highlighting.
+
+use the menu in the upper right corner to see the names of the highlighted bus routes.
+
 ## dependencies
 - [csv parse](http://csv.adaltas.com/parse/)
 - [turf js](http://turfjs.org/)
@@ -13,8 +18,7 @@ medium post about v1 of this project [here](https://medium.com/@thfield/adventur
 - [leaflet](http://leafletjs.com)
 - [webpack](https://webpack.js.org/)
 
-
-## steps
+## steps after locally cloning
 1. `npm install`
 1. `npm run data`
 1. `npm run start`
