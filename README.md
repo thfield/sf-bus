@@ -20,14 +20,17 @@ medium post about v1 of this project [here](https://medium.com/@thfield/adventur
 1. `npm run start`
 
 ## todos
+- sticky header on sidebar menu
 - tie into nextbus data feed, show the next bus to arrive at my location
 - locate user initially http://freegeoip.net/ or https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation
 - turn makeGeoJsons.js into an npm module for gtfs->geojson (?)
   - https://github.com/blinktaginc/gtfs-to-geojson
   - https://github.com/node-geojson/gtfs2geojson
   - https://github.com/andrewharvey/gtfs2geojson
+- create geojson of stops from mostFreqTrips.trip_id->stop_times.trip_id->stop_times.stop_id->stops.stop_id->stop[stop_lat, stop_lon]
 
 ### done
+- two click interaction - set start, end? two levels of highlight, show bus line in marker?
 - use [transit feeds](http://transitfeeds.com/p/sfmta/60) for gtfs data
 - use mapbox studio tiles to create tiles with bus route geojsons
 - use mapbox gl

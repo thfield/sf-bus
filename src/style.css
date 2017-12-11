@@ -57,6 +57,9 @@ body {
 .hl {
   color: #e09600;
 }
+.hldouble {
+  color: #bb0070;
+}
 .hidden {
   display: none;
 }

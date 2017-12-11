@@ -18,9 +18,9 @@
   "author": "Tyler Field",
   "license": "ISC",
   "dependencies": {
+    "@turf/turf": "^5.1.3",
     "csv-parse": "^1.2.0",
-    "mapbox-gl": "^0.41.0",
-    "turf": "^3.0.14"
+    "mapbox-gl": "^0.41.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

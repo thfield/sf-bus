@@ -4,7 +4,7 @@ console.time('Make JSONs')
 const fs = require('fs')
 const csv = require('csv-parse/lib/sync')
 const write = require('./utils/write')
-const turf = require('turf')
+const turf = require('@turf/turf')
 
 const make = require('./utils/make')
 
@@ -56,6 +56,7 @@ mostFreqTrips.forEach(function (route) {
 
 let routesTrips = new Map()
 routeShapes.forEach(function (data, shapeid) {
+  let routeDirection = `${data.route}-${data.props.services[0][1]}`
   let props = {
     shortName: data.props.shortName,
     longName: data.props.longName,
@@ -63,12 +64,13 @@ routeShapes.forEach(function (data, shapeid) {
     headsign: data.props.services[0][2],
     direction: data.props.services[0][1],
     service_ids: data.props.services.map(d => d[0]),
-    busType: make.busType(data.props.shortName)
+    busType: make.busType(data.props.shortName),
+    routeDirection: routeDirection
   }
   let geoJson = turf.lineString(data.geo, props)
   if (props.shortName.includes('/')) { props.shortName = props.shortName.replace(/\//, '-') }
   write(`${outPath}/${props.shortName}-${props.direction}.geo.json`, geoJson)
-  routesTrips.set(`${props.route}-${props.direction}`, props.headsign)
+  routesTrips.set(routeDirection, props.headsign)
 })
 
 let lines = make.lineList(routes, routesTrips)

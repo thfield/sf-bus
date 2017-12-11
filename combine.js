@@ -1,7 +1,7 @@
 'use strict'
-
+// create single file for upload to mapbox
 const fs = require('fs')
-const turf = require('turf')
+const turf = require('@turf/turf')
 const write = require('./utils/write')
 
 const path = `./geojson`
